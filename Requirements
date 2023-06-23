@@ -1,0 +1,15 @@
+Wymagania funkcjonalne:
+zapisywanie do pliku danych - np. zrzut bazy danych, zapis danych z formularza itp. (1 pkt.)
+zapisywanie do bazy danych (mysql) (1 pkt)
+odczytywanie z bazy danych (1 pkt)
+update i usuwanie z bazy danych (1,5 pkt)
+
+użycie sesji w projekcie, nie sztuczne, tylko takie by pozwalało realnie zobrazować ich funkcjonalność (2 pkt)
+użycie ciasteczek - utworzenie oraz realne skorzystanie z nich (1 pkt)
+użycie pętli, instrukcje warunkowe, tablice, funkcji (1,5)
+
+(dodatkowo) użycie czegoś z PHP, co nie było pokazywane na zajęciach - biblioteka, narzędzie, konstrukcja, temat (wymagane omówienie) (2pkt)
+hostowanie strony na zewnętrznym serwerze (2pkt)
+
+
+“Ładny”/przejrzysty projekt - np. ładnie sformatowany formularz, jednolity; widok strony bez zbędnych elementów, czy rozjeżdżających się komponentów (1pkt)
