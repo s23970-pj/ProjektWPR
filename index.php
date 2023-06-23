@@ -5,6 +5,18 @@
     <title>Formularz rezerwacji</title>
 </head>
 <body>
+<?php
+require_once 'db_connection.php';
+// Pobranie rezerwacji z bazy danych
+$query2 = "SELECT * FROM reservations";
+$result = mysqli_query($con, $query2);
+
+// Zapisanie rezerwacji do tablicy
+$reservations = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $reservations[] = $row;
+}
+?>
 <h1>Formularz rezerwacji</h1>
 <form method="post">
     <label for="firstName">Imię:</label>
@@ -26,14 +38,15 @@
 </form>
 
 <?php
-session_start();
+session_start(); //ciasteczka zamiast?
 require_once 'db_connection.php'; // Plik zawierający połączenie z bazą danych
 
-// Sprawdzenie, czy użytkownik jest zalogowany
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
 }
+
+
 //obsluga formularza
 if (isset($_POST["submit"])) {
     $firstName = $_POST['firstName'];
@@ -50,22 +63,16 @@ if (isset($_POST["submit"])) {
       // Zapisanie rezerwacji do bazy danych
       $query = "INSERT INTO reservations (first_name, last_name, reservation_date, start_time, end_time)
                   VALUES ('$firstName', '$lastName', '$date', '$startTime', '$endTime')";
-      mysqli_query($conn, $query);
+      mysqli_query($con, $query);
 
-      // Przekierowanie na stronę index.php po zapisaniu rezerwacji
+     // Przekierowanie na stronę index.php po zapisaniu rezerwacji
       header("Location: index.php");
       exit();
   }
-    // Pobranie rezerwacji z bazy danych
-    $query = "SELECT * FROM reservations";
-    $result = mysqli_query($conn, $query);
 
-// Zapisanie rezerwacji do tablicy
-    $reservations = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $reservations[] = $row;
-    }
-    print_r($reservations);
+
+
+
 }
 
 ?>
@@ -74,10 +81,22 @@ if (isset($_POST["submit"])) {
 <table>
     <tr>
         <th>ID Rezerwacji</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
         <th>Data rezerwacji</th>
         <th>Godzina rozpoczęcia</th>
         <th>Godzina zakończenia</th>
     </tr>
+    <?php foreach ($reservations as $reservation): ?>
+        <tr>
+            <td><?php echo $reservation['id']; ?></td>
+            <td><?php echo $reservation['first_name']; ?></td>
+            <td><?php echo $reservation['last_name']; ?></td>
+            <td><?php echo $reservation['reservation_date']; ?></td>
+            <td><?php echo $reservation['start_time']; ?></td>
+            <td><?php echo $reservation['end_time']; ?></td>
+        </tr>
+    <?php endforeach; ?>
 </table>
 
 <form method="post" action="logout.php">
@@ -86,4 +105,4 @@ if (isset($_POST["submit"])) {
 </body>
 </html>
 
-<!-- wyswietlanie rezerwacji w schludnej formie, dodaj na db, id rezerwacji, -->
+<!-- dodaj na db, id rezerwacji, -->
