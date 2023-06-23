@@ -105,4 +105,4 @@ if (isset($_POST["submit"])) {
 </body>
 </html>
 
-<!-- dodaj na db, id rezerwacji, -->
+<!-- dodaj na db-->

@@ -1,7 +1,6 @@
 Wymagania funkcjonalne:
 zapisywanie do pliku danych - np. zrzut bazy danych, zapis danych z formularza itp. (1 pkt.)
-zapisywanie do bazy danych (mysql) (1 pkt)
-odczytywanie z bazy danych (1 pkt)
+
 update i usuwanie z bazy danych (1,5 pkt)
 
 użycie sesji w projekcie, nie sztuczne, tylko takie by pozwalało realnie zobrazować ich funkcjonalność (2 pkt)
