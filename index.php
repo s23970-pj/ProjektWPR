@@ -39,7 +39,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 <?php
 session_start(); //ciasteczka zamiast?
-require_once 'db_connection.php'; // Plik zawierający połączenie z bazą danych
+require_once 'db_connection.php';
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
@@ -60,12 +60,12 @@ if (isset($_POST["submit"])) {
     echo "Godzina zakończenia powinna być późniejsza niż godzina rozpoczęcia.";
   } else
   {
-      // Zapisanie rezerwacji do bazy danych
+
       $query = "INSERT INTO reservations (first_name, last_name, reservation_date, start_time, end_time)
                   VALUES ('$firstName', '$lastName', '$date', '$startTime', '$endTime')";
       mysqli_query($con, $query);
 
-     // Przekierowanie na stronę index.php po zapisaniu rezerwacji
+
       header("Location: index.php");
       exit();
   }
@@ -105,4 +105,4 @@ if (isset($_POST["submit"])) {
 </body>
 </html>
 
-<!-- dodaj na db-->
+<!-- dodaj na db, uaktualnij w db-->
