@@ -1,12 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="style.css">
-    <title>Formularz rezerwacji</title>
-</head>
-<body>
 <?php
+session_start();
 require_once 'db_connection.php';
+
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php");
+    exit();
+}
+
+
+if (isset($_POST["submit"])) {
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $date = $_POST['date'];
+    $startTime = $_POST['startTime'];
+    $endTime = $_POST['endTime'];
+
+    if (!empty($startTime) && !empty($endTime) && $startTime >= $endTime) {
+        echo "Godzina zakończenia powinna być późniejsza niż godzina rozpoczęcia.";
+    } else {
+        $query = "INSERT INTO reservations (first_name, last_name, reservation_date, start_time, end_time)
+                  VALUES ('$firstName', '$lastName', '$date', '$startTime', '$endTime')";
+        mysqli_query($con, $query);
+
+        header("Location: index.php");
+        exit();
+    }
+}
+
+
+if (isset($_POST["delete"])) {
+    $reservationId = $_POST['reservationId'];
+
+    $query = "DELETE FROM reservations WHERE id='$reservationId'";
+    mysqli_query($con, $query);
+
+    header("Location: index.php");
+    exit();
+}
+
 // Pobranie rezerwacji z bazy danych
 $query2 = "SELECT * FROM reservations";
 $result = mysqli_query($con, $query2);
@@ -17,10 +48,18 @@ while ($row = mysqli_fetch_assoc($result)) {
     $reservations[] = $row;
 }
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Formularz rezerwacji</title>
+</head>
+<body>
 <h1>Formularz rezerwacji</h1>
 <form method="post">
     <label for="firstName">Imię:</label>
-    <input type="text" name="firstName" id="firstName" required><BR><br>
+    <input type="text" name="firstName" id="firstName" required><br><br>
 
     <label for="lastName">Nazwisko:</label>
     <input type="text" id="lastName" name="lastName" value="" required><br><br>
@@ -34,48 +73,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     <label for="endTime">Godzina zakończenia:</label>
     <input type="time" id="endTime" name="endTime" value="" required><br><br>
 
-    <input type="submit" name="submit" value="submit">
+    <input type="submit" name="submit" value="Dodaj rezerwację">
 </form>
-
-<?php
-session_start(); //ciasteczka zamiast?
-require_once 'db_connection.php';
-
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: login.php");
-    exit();
-}
-
-
-//obsluga formularza
-if (isset($_POST["submit"])) {
-    $firstName = $_POST['firstName'];
-    $lastName=$_POST['lastName'];
-    $date=$_POST['date'];
-    $startTime=$_POST['startTime'];
-    $endTime=$_POST['endTime'];
-
-    print_r($startTime);
-  if (!empty($startTime) && !empty($endTime) && $startTime >= $endTime) {
-    echo "Godzina zakończenia powinna być późniejsza niż godzina rozpoczęcia.";
-  } else
-  {
-
-      $query = "INSERT INTO reservations (first_name, last_name, reservation_date, start_time, end_time)
-                  VALUES ('$firstName', '$lastName', '$date', '$startTime', '$endTime')";
-      mysqli_query($con, $query);
-
-
-      header("Location: index.php");
-      exit();
-  }
-
-
-
-
-}
-
-?>
 
 <h2>Lista rezerwacji</h2>
 <table>
@@ -86,6 +85,7 @@ if (isset($_POST["submit"])) {
         <th>Data rezerwacji</th>
         <th>Godzina rozpoczęcia</th>
         <th>Godzina zakończenia</th>
+        <th>Akcje</th>
     </tr>
     <?php foreach ($reservations as $reservation): ?>
         <tr>
@@ -95,6 +95,12 @@ if (isset($_POST["submit"])) {
             <td><?php echo $reservation['reservation_date']; ?></td>
             <td><?php echo $reservation['start_time']; ?></td>
             <td><?php echo $reservation['end_time']; ?></td>
+            <td>
+                <form method="post">
+                    <input type="hidden" name="reservationId" value="<?php echo $reservation['id']; ?>">
+                    <input type="submit" name="delete" value="Usuń">
+                </form>
+            </td>
         </tr>
     <?php endforeach; ?>
 </table>
@@ -104,5 +110,3 @@ if (isset($_POST["submit"])) {
 </form>
 </body>
 </html>
-
-<!-- dodaj na db, uaktualnij w db-->
